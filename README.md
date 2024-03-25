@@ -33,15 +33,21 @@ docker run -v /path/to/postgresfarma.sql:/docker-entrypoint-initdb.d/init.sql -p
 From src directory run:
 
 **Windows**
+```
 javac -encoding UTF-8 -d .\out --module-path "C:\path\to\javafx-sdk-..\lib" --add-modules javafx.controls,javafx.media,javafx.graphics ".\pt\nomorealex\medmanagement\Main.java"
-
+```
+```
 java -cp .\out --module-path "C:\path\to\javafx-sdk-..\lib" --add-modules javafx.controls,javafx.media,javafx.graphics pt.nomorealex.medmanagement.Main
-
+```
 
 **Linux**
-javac -encoding UTF-8 -d ./out --module-path /path/to/javafx-sdk-../lib --add-modules javafx.controls,javafx.media,javafx.graphics ./pt/nomorealex/medmanagement/Main.java
 
+```
+javac -encoding UTF-8 -d ./out --module-path /path/to/javafx-sdk-../lib --add-modules javafx.controls,javafx.media,javafx.graphics ./pt/nomorealex/medmanagement/Main.java
+```
+```
 java -cp ./out --module-path /path/to/javafx-sdk-../lib --add-modules javafx.controls,javafx.media,javafx.graphics pt.nomorealex.medmanagement.Main
+```
 
 ## Compile with sh or .bat
 
