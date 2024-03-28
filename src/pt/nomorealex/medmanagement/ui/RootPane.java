@@ -1,5 +1,6 @@
 package pt.nomorealex.medmanagement.ui;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -26,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pt.nomorealex.medmanagement.model.ServiceAPI;
+import pt.nomorealex.medmanagement.ui.factories.LabelFactory;
 import pt.nomorealex.medmanagement.ui.resources.ImageManager;
 import pt.nomorealex.medmanagement.ui.sections.CreditsUI;
 import pt.nomorealex.medmanagement.ui.sections.InitialUI;
@@ -33,6 +35,7 @@ import pt.nomorealex.medmanagement.ui.sections.MainUI;
 import pt.nomorealex.medmanagement.ui.sections.orders.OrdersUI;
 import pt.nomorealex.medmanagement.ui.sections.pills.PillsUI;
 import pt.nomorealex.medmanagement.ui.sections.users.UsersUI;
+
 
 public class RootPane extends BorderPane {
     private static final int NR_BUTTONS = 4;
@@ -43,7 +46,7 @@ public class RootPane extends BorderPane {
     ServiceAPI dataModel;
     StackPane stackPane;
     Image backgroundImage;
-    Label label;
+    Label sectionsLabel;
     ToolBar toolBar;
     MenuBar menuBar;
     public RootPane(ServiceAPI serviceAPI)  {
@@ -53,15 +56,14 @@ public class RootPane extends BorderPane {
         update();
     }
 
-
     private void createViews() {
 
         stackPane = new StackPane(
                 new InitialUI(dataModel),
                 new MainUI(dataModel),
-                new UsersUI(),
-                new PillsUI(),
-                new OrdersUI()
+                new UsersUI(dataModel),
+                new PillsUI(dataModel),
+                new OrdersUI(dataModel)
         );
 
         try {
@@ -75,51 +77,43 @@ public class RootPane extends BorderPane {
             )));
         }catch(NullPointerException ignored){}
 
-        label = new Label("Sections:");
-        label.setTextFill(Color.DARKBLUE);
-        label.setAlignment(Pos.CENTER);
+        sectionsLabel = LabelFactory.createLabel(null,"Sections:", Color.DARKBLUE,Pos.CENTER,0);
 
         btns = new Button[NR_BUTTONS];
         for(int i = 0; i < NR_BUTTONS; ++i) {
             btns[i] = new Button(buttonsIdentifiers[i]);
-            btns[i].setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+            btns[i].setPrefSize(BUTTON_WIDTH,BUTTON_HEIGHT);
             btns[i].setAlignment(Pos.CENTER_LEFT);
         }
 
-        toolBar = new ToolBar(
-            label,
-            new Separator(), new Separator(), new Separator(),
-            btns[0], btns[1], btns[2], btns[3],
-            new Separator()
-        );
+        toolBar = new ToolBar(sectionsLabel, new Separator(), new Separator(),
+                btns[0], btns[1], btns[2], btns[3], new Separator());
         toolBar.setOrientation(Orientation.VERTICAL);
 
         MenuItem mnAbout = new MenuItem("About...");
         mnAbout.setOnAction(event -> showAbout());
-        menuBar = new MenuBar(
-                new Menu("More",null,mnAbout)
-        );
+        menuBar = new MenuBar(new Menu("More",null,mnAbout));
         this.setCenter(stackPane);
     }
 
     private void registerHandlers() {
 
-        //dataModel.addPropertyChangeListener(evt -> {update();});
+        dataModel.addListener("all",event -> Platform.runLater(this::update));
 
         btns[0].setOnAction(event -> {
-
+            dataModel.mainPage();
         });
 
         btns[1].setOnAction(event -> {
-
+            dataModel.usersPage();
         });
 
         btns[2].setOnAction(event -> {
-
+            dataModel.pillsPage();
         });
 
         btns[3].setOnAction(event -> {
-
+            dataModel.ordersPage();
         });
     }
 
@@ -130,7 +124,7 @@ public class RootPane extends BorderPane {
                 setLeft(null);
                 setBottom(new CreditsUI());
                 break;
-            case MAINSTATE, PILLSSTATE, USERSSTATE, ORDERSSTATE:
+            case MAINSTATE, USERSSTATE, PILLSSTATE, ORDERSSTATE:
                 setTop(menuBar);
                 setLeft(toolBar);
                 break;
@@ -141,7 +135,9 @@ public class RootPane extends BorderPane {
 
     private void showAbout() {
         final Stage stage = new Stage();
+        try {
         stage.getIcons().add(ImageManager.loadImage("pills.png"));
+        }catch(NullPointerException ignored){}
         String text = """
                          LEI - 2023
                      (c)Nuno Domingues
