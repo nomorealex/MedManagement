@@ -15,7 +15,6 @@ public class CreditsUI extends HBox {
         registerHandlers();
         update();
     }
-
     private void createViews() {
         setAlignment(Pos.CENTER);
         setPadding(new Insets(10));
