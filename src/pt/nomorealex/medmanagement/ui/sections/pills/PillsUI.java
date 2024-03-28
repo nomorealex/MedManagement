@@ -1,48 +1,42 @@
 package pt.nomorealex.medmanagement.ui.sections.pills;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import pt.nomorealex.medmanagement.model.ServiceAPI;
 import pt.nomorealex.medmanagement.model.fsm.ServiceAPIStates;
+import pt.nomorealex.medmanagement.ui.factories.LabelFactory;
+import pt.nomorealex.medmanagement.ui.resources.ImageManager;
+
+import java.util.List;
 
 public class PillsUI extends BorderPane {
     ServiceAPI dataModel;
-    Label lb;
-    public PillsUI(ServiceAPI serviceAPI){
-        dataModel = serviceAPI;
-        createViews();
-        registerHandlers();
-        update();
-    }
+    Label pillsLabel;
 
-    private void createViews() {
-        lb = new Label("Pills Page - IN DEVELOPMENT.....");
-        lb.setAlignment(Pos.CENTER);
-        this.setCenter(lb);
-    }
+    TableView<String> tableView;
 
-    private void registerHandlers() {
-        dataModel.addListener("all",event -> Platform.runLater(this::update));
-    }
-
-    private void update() {
-        if (dataModel.getState() != ServiceAPIStates.PILLSSTATE) {
-            this.setVisible(false);
-            return;
-        }
-        this.setVisible(true);
-    }
-    /*
-    ServiceAPI dataModel;
-
-    TableView<Medicamento> tableView;
-
-    TableColumn<Medicamento,String> ID;
-    TableColumn<Medicamento,String> Nome;
-    TableColumn<Medicamento,String> QtStock;
-
+    TableColumn<String,String> ID;
+    TableColumn<String,String> Nome;
+    TableColumn<String,String> QtStock;
 
 
     TextField tfPesquisa;
@@ -54,10 +48,9 @@ public class PillsUI extends BorderPane {
     MenuItem detalhes,editar_medicamento,remover_medicamento;
     Stage stage1;
 
-    List<Medicamento> aux=null;
+    List<String> aux=null;
 
-
-    public PillsUI(ServiceAPI serviceAPI) {
+    public PillsUI(ServiceAPI serviceAPI){
         dataModel = serviceAPI;
         createViews();
         registerHandlers();
@@ -65,32 +58,27 @@ public class PillsUI extends BorderPane {
     }
 
     private void createViews() {
+        pillsLabel = LabelFactory.createLabel("Special", "Pills (dev)", Color.DARKBLUE, null, 0);
 
-        lb = new Label("Medicamentos");
-        lb.setTextFill(Color.DARKBLUE);
-        lb.setId("Special");
-
-        HBox hBox = new HBox(lb);
+        HBox hBox = new HBox(pillsLabel);
         //hBox.setSpacing(250);
 
-
-        Image ButtonAddUser = new Image(Objects.requireNonNull(getClass().getResourceAsStream("../../resources/images/plus1.png")),32,32,false,false);
-        lb1 = new Button("Adicionar Medicamento");
+        Image ButtonAddUser = ImageManager.loadImageSize("plus1.png",32,32,false,false);
+        lb1 = new Button("Add Pill");
         lb1.setGraphic(new ImageView(ButtonAddUser));
 
         HBox buttonsBox = new HBox(lb1);
         buttonsBox.setSpacing(10);
         buttonsBox.setAlignment(Pos.TOP_LEFT);
 
-
         tfPesquisa = new TextField();
-        tfPesquisa.setPromptText("Escreva o que quer pesquisar");
+        tfPesquisa.setPromptText("Search...");
         tfPesquisa.setPrefWidth(Integer.MAX_VALUE);
 
         ObservableList<String> options =
                 FXCollections.observableArrayList(
-                        "Procurar por ID",
-                        "Procurar por Nome"
+                        "Search by ID",
+                        "Search by Name"
                 );
         comboBox = new ComboBox(options);
         comboBox.setMinWidth(150);
@@ -104,13 +92,13 @@ public class PillsUI extends BorderPane {
 
         tableView = new TableView();
 
-        ID = new TableColumn<Medicamento,String>("ID");
-        ID.setCellValueFactory(new PropertyValueFactory<Medicamento,String>("ID"));
-        Nome = new TableColumn<Medicamento,String>("Nome");
-        Nome.setCellValueFactory(new PropertyValueFactory<Medicamento,String>("Nome"));
-        QtStock = new TableColumn<Medicamento,String>("Qt.stock");
-        QtStock.setCellValueFactory(new PropertyValueFactory<Medicamento,String>("stock"));
-        tableView.setPlaceholder(new Label("Sem dados"));
+        ID = new TableColumn<String,String>("ID");
+        ID.setCellValueFactory(new PropertyValueFactory<String,String>("ID"));
+        Nome = new TableColumn<String,String>("Name");
+        Nome.setCellValueFactory(new PropertyValueFactory<String,String>("Nome"));
+        QtStock = new TableColumn<String,String>("Qt.stock");
+        QtStock.setCellValueFactory(new PropertyValueFactory<String,String>("stock"));
+        tableView.setPlaceholder(new Label("No Data"));
         tableView.setMaxHeight(600);
         tableView.getColumns().add(ID);
         tableView.getColumns().add(Nome);
@@ -118,9 +106,9 @@ public class PillsUI extends BorderPane {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         contextMenu = new ContextMenu();
-        detalhes = new MenuItem("Detalhes");
-        editar_medicamento = new MenuItem("Editar Medicamento");
-        remover_medicamento = new MenuItem("Remover Medicamento");
+        detalhes = new MenuItem("Details");
+        editar_medicamento = new MenuItem("Edit Pill");
+        remover_medicamento = new MenuItem("Remove Pill");
         contextMenu.getItems().addAll(detalhes, editar_medicamento, remover_medicamento);
         tableView.setContextMenu(contextMenu);
 
@@ -130,157 +118,18 @@ public class PillsUI extends BorderPane {
         Arrange.setAlignment(Pos.TOP_LEFT);
         Arrange.setSpacing(20);
         this.setCenter(Arrange);
-
     }
 
     private void registerHandlers() {
-        model.addPropertyChangeListener(evt -> { update(); });
-
-        tfPesquisa.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                Platform.runLater(()->{
-                    if(comboBox.getValue().toString().equals("Procurar por ID")) {
-                        if(tfPesquisa.getText().trim().isBlank()){
-                            update();
-                        }else {
-                            Medicamento aux = model.getMedicamentoID(tfPesquisa.getText().trim());
-                            if (aux != null) {
-                                tableView.getItems().clear();
-                                tableView.getItems().add(aux);
-                            } else {
-                                ToastMessage.show(getScene().getWindow(), "Não existe nenhum Medicamento com esse numero registado!");
-                            }
-                        }
-                    }
-                    else if(comboBox.getValue().toString().equals("Procurar por Nome")){
-                        if(tfPesquisa.getText().trim().isBlank()){
-                            update();
-                        }else {
-                            aux = model.getMedicamentoNome(tfPesquisa.getText().trim());
-                            if (aux.size() > 0) {
-                                tableView.getItems().clear();
-                                for (Medicamento a : aux)
-                                    tableView.getItems().add(a);
-                            } else {
-                                ToastMessage.show(getScene().getWindow(), "Não existe nenhum Medicamento com esse nome registado!");
-                            }
-                        }
-                    }
-                });
-
-
-
-            }
-        });
-
-
-
-
-        //  tableView.getItems().add(new Me("John", "Doe"));
-
-        detalhes.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(tableView.getSelectionModel().getSelectedItem() != null) {
-                    Medicamento medicamento = tableView.getSelectionModel().getSelectedItem();
-                    stage1.setScene(new Scene(new RootPane1(model, new DetalhesMedicamentoUI(model,medicamento)), 950, 600));
-                    System.out.println("detalhes...");
-                    stage1.setTitle("Detalhes");
-                    stage1.show();
-                }
-            }
-        });
-        editar_medicamento.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(tableView.getSelectionModel().getSelectedItem() != null) {
-                    Medicamento medicamento = tableView.getSelectionModel().getSelectedItem();
-                    stage1.setScene(new Scene(new RootPane1(model, new EditarMedicamentoUI(model,medicamento)), 950, 600));
-                    System.out.println("Editar...");
-                    stage1.setTitle("Detalhes");
-                    stage1.show();
-                }
-            }
-        });
-        remover_medicamento.setOnAction(event->{
-            if (tableView.getSelectionModel().getSelectedItem() != null) {
-                Medicamento medicamento = tableView.getSelectionModel().getSelectedItem();
-                if (model.removerMedicamento(medicamento.getID())) {
-                    ToastMessage.show(getScene().getWindow(), "Medicamento removido com sucesso!");
-                } else
-                    ToastMessage.show(getScene().getWindow(), "Medicamento não foi removido com sucesso!");
-            }
-        });
-*/
-       /* remover_medicamento.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Alert a = new Alert(Alert.AlertType.CONFIRMATION);
-                a.setTitle("Alerta!");
-                a.setHeaderText(null);
-                a.setContentText("Deseja mesmo\ncolocar o medicamento no histórico?");
-                final Stage stage = (Stage) a.getDialogPane().getScene().getWindow();
-                try {
-                    stage.getIcons().add(new Image(this.getClass().getResource("../resources/images/pills.png").toString()));
-                }catch (NullPointerException e){}
-                a.showAndWait();
-                if(a.getResult() == ButtonType.OK){
-                    stage.close();
-                    Platform.exit();
-                    System.exit(0);
-                }
-
-            }
-        });
-*/
-
-/*
-        DropShadow shadow = new DropShadow();
-        lb1.addEventHandler(MouseEvent.MOUSE_ENTERED,
-                new EventHandler<MouseEvent>() {
-                    @Override public void handle(MouseEvent e) {
-                        lb1.setEffect(shadow);
-                        lb1.setStyle("-fx-border-color: #1a83c6; -fx-border-width: 2");
-                    }
-                });
-
-        lb1.addEventHandler(MouseEvent.MOUSE_EXITED,
-                new EventHandler<MouseEvent>() {
-                    @Override public void handle(MouseEvent e) {
-                        lb1.setEffect(null);
-                        lb1.setStyle("-fx-border-color: none");
-                        lb1.focusTraversableProperty().set(false);
-                    }
-                });
-
-
-        lb1.setOnAction(actionEvent -> {
-            stage1.setScene(new Scene(new RootPane1(model,new AdicionarMedicamentoUI(model)),950,600));
-            stage1.setTitle("Adicionar Medicamento");
-            stage1.show();
-
-        });
-
-
-
-
+        dataModel.addListener("all",event -> Platform.runLater(this::update));
     }
-    private void update() {
 
-        if (model.getState() != MEEstados.ESTADOMEDICAMENTOS) {
+    private void update() {
+        if (dataModel.getState() != ServiceAPIStates.PILLSSTATE) {
             this.setVisible(false);
             return;
         }
         this.setVisible(true);
-
-        tableView.getItems().clear();
-        List<Medicamento> medicamentos =  model.getMedicamentos();
-        if(medicamentos.size() != 0) {
-            for (Medicamento u : medicamentos) {
-                tableView.getItems().add(u);
-            }
-        }
     }
-*/
 
 }
