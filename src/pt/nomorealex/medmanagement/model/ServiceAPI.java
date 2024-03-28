@@ -37,7 +37,6 @@ public class ServiceAPI {
         propertyChangeSupport.firePropertyChange("all",null,null);
     }
 
-
     public void mainPage(){
         context.mainPage();
         propertyChangeSupport.firePropertyChange("all",null,null);
