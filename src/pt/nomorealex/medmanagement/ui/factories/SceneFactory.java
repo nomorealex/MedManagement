@@ -5,6 +5,7 @@ import pt.nomorealex.medmanagement.model.ServiceAPI;
 import pt.nomorealex.medmanagement.ui.MainCustomPane;
 import pt.nomorealex.medmanagement.ui.RefPane;
 import pt.nomorealex.medmanagement.ui.resources.CSSManager;
+import pt.nomorealex.medmanagement.ui.sections.pills.secondstage.AddPillUI;
 import pt.nomorealex.medmanagement.ui.sections.users.secondstage.AddUserUI;
 import pt.nomorealex.medmanagement.ui.sections.users.secondstage.DetailsUserUI;
 import pt.nomorealex.medmanagement.ui.sections.users.secondstage.EditUserUI;
@@ -63,7 +64,11 @@ public final class SceneFactory {
                 CSSManager.applyCSS(scene.getRoot(), "styles.css");
                 yield scene;
             }
-            case ADDPILLPANE -> null;
+            case ADDPILLPANE -> {
+                Scene scene = new Scene(new AddPillUI(serviceAPI));
+                CSSManager.applyCSS(scene.getRoot(), "styles.css");
+                yield scene;
+            }
             case DETAILSPILLPANE -> null;
             case EDITPILLPANE -> null;
             case ADDORDERPANE -> null;

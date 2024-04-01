@@ -20,13 +20,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pt.nomorealex.medmanagement.model.ServiceAPI;
 import pt.nomorealex.medmanagement.model.fsm.ServiceAPIStates;
+import pt.nomorealex.medmanagement.ui.RefPane;
 import pt.nomorealex.medmanagement.ui.factories.LabelFactory;
+import pt.nomorealex.medmanagement.ui.factories.SceneFactory;
+import pt.nomorealex.medmanagement.ui.factories.StageFactory;
+import pt.nomorealex.medmanagement.ui.resources.ImageConstants;
 import pt.nomorealex.medmanagement.ui.resources.ImageManager;
-
-import java.util.List;
+import pt.nomorealex.medmanagement.ui.structures.StageData;
 
 public class PillsUI extends BorderPane {
     ServiceAPI dataModel;
@@ -46,9 +50,9 @@ public class PillsUI extends BorderPane {
 
     ContextMenu contextMenu;
     MenuItem detalhes,editar_medicamento,remover_medicamento;
-    Stage stage1;
 
-    List<String> aux=null;
+
+    Stage secondStage;
 
     public PillsUI(ServiceAPI serviceAPI){
         dataModel = serviceAPI;
@@ -122,6 +126,12 @@ public class PillsUI extends BorderPane {
 
     private void registerHandlers() {
         dataModel.addListener("all",event -> Platform.runLater(this::update));
+
+        lb1.setOnAction(actionEvent -> {
+            secondStage = StageFactory.configurateStage(new StageData(950,600,this.getScene().getWindow(), Modality.WINDOW_MODAL,"PM - Add Pill", ImageConstants.PILLS.getName()));
+            secondStage.setScene(SceneFactory.configurateScene(RefPane.ADDPILLPANE,dataModel));
+            secondStage.show();
+        });
     }
 
     private void update() {
