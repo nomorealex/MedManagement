@@ -12,8 +12,6 @@ import javafx.scene.paint.Color;
 public class CreditsUI extends HBox {
     public CreditsUI() {
         createViews();
-        registerHandlers();
-        update();
     }
     private void createViews() {
         setAlignment(Pos.CENTER);
@@ -26,7 +24,4 @@ public class CreditsUI extends HBox {
         lbOut.setMinWidth(100);
         this.getChildren().add(lbOut);
     }
-
-    private void registerHandlers() {}
-    private void update() {}
 }

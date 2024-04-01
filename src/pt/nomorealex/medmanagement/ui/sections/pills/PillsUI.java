@@ -58,7 +58,7 @@ public class PillsUI extends BorderPane {
     }
 
     private void createViews() {
-        pillsLabel = LabelFactory.createLabel("Special", "Pills (dev)", Color.DARKBLUE, null, 0);
+        pillsLabel = LabelFactory.createLabel("Special", "Pills", Color.DARKBLUE, null, 0);
 
         HBox hBox = new HBox(pillsLabel);
         //hBox.setSpacing(250);

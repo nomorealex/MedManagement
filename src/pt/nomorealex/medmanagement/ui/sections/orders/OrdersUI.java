@@ -47,7 +47,7 @@ public class OrdersUI extends BorderPane {
     }
 
     private void createViews() {
-        ordersLabel = LabelFactory.createLabel("Special","Orders (dev)", Color.DARKBLUE, null, 0);
+        ordersLabel = LabelFactory.createLabel("Special","Orders", Color.DARKBLUE, null, 0);
 
         HBox hBox = new HBox(ordersLabel);
         hBox.setSpacing(250);
