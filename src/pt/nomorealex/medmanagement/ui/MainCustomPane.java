@@ -28,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pt.nomorealex.medmanagement.model.ServiceAPI;
 import pt.nomorealex.medmanagement.ui.factories.LabelFactory;
+import pt.nomorealex.medmanagement.ui.resources.ImageConstants;
 import pt.nomorealex.medmanagement.ui.resources.ImageManager;
 import pt.nomorealex.medmanagement.ui.sections.CreditsUI;
 import pt.nomorealex.medmanagement.ui.sections.InitialUI;
@@ -37,7 +38,7 @@ import pt.nomorealex.medmanagement.ui.sections.pills.PillsUI;
 import pt.nomorealex.medmanagement.ui.sections.users.UsersUI;
 
 
-public class RootPane extends BorderPane {
+public class MainCustomPane extends BorderPane {
     private static final int NR_BUTTONS = 4;
     private static final int BUTTON_WIDTH= 140;
     private static final int BUTTON_HEIGHT = 40;
@@ -49,7 +50,7 @@ public class RootPane extends BorderPane {
     Label sectionsLabel;
     ToolBar toolBar;
     MenuBar menuBar;
-    public RootPane(ServiceAPI serviceAPI)  {
+    public MainCustomPane(ServiceAPI serviceAPI)  {
         dataModel = serviceAPI;
         createViews();
         registerHandlers();
@@ -57,7 +58,6 @@ public class RootPane extends BorderPane {
     }
 
     private void createViews() {
-
         stackPane = new StackPane(
                 new InitialUI(dataModel),
                 new MainUI(dataModel),
@@ -67,7 +67,7 @@ public class RootPane extends BorderPane {
         );
 
         try {
-            backgroundImage = ImageManager.loadImage("pills.png");
+            backgroundImage = ImageManager.loadImage(ImageConstants.PILLS.getName());
             stackPane.setBackground(new Background(new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,
@@ -136,7 +136,7 @@ public class RootPane extends BorderPane {
     private void showAbout() {
         final Stage stage = new Stage();
         try {
-        stage.getIcons().add(ImageManager.loadImage("pills.png"));
+        stage.getIcons().add(ImageManager.loadImage(ImageConstants.PILLS.getName()));
         }catch(NullPointerException ignored){}
         String text = """
                          LEI - 2023
