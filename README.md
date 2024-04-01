@@ -2,8 +2,6 @@
 
 ## Clone this repository via `https` or `ssh` keys
 
---------
-
 ```bash
 git clone https://github.com/nomorealex/MedManagement.git
 ```
@@ -11,7 +9,6 @@ git clone https://github.com/nomorealex/MedManagement.git
 
 ## Run database (Docker)
 
---------
 **CMD**
 
 ```
@@ -20,7 +17,6 @@ set PASS=password123!
 docker run -v C:\path\to\postgresfarma.sql:/docker-entrypoint-initdb.d/init.sql -p 5432:5432 -e POSTGRES_PASSWORD=%PASS% postgres
 ```
 
---------
 **Powershell**
 
 ```
@@ -29,7 +25,6 @@ $Env:PASS = 'password123!'
 docker run -v C:\path\to\postgresfarma.sql:/docker-entrypoint-initdb.d/init.sql -p 5432:5432 -e POSTGRES_PASSWORD=$Env:pass postgres
 ```
 
---------
 **Linux**
 
 ```
@@ -39,8 +34,6 @@ docker run -v /path/to/postgresfarma.sql:/docker-entrypoint-initdb.d/init.sql -p
 ```
 
 ## Compile and Run
-
----------
 
 > To compile and run, it was used the `Java-Jdk17` and `JavaFX-sdk-17.0.7`
 
@@ -65,7 +58,6 @@ java -cp ../out --module-path /path/to/javafx-sdk-../lib --add-modules javafx.co
 
 ## Layout
 
-------
 #### Initial Page:
 ![Initial Page](layoutimages/main.png "Initial Page")
 
